@@ -1,0 +1,54 @@
+//Para android menor a 8 y superiores, expandible//
+//Cornejo Arreola Luis Enrique//
+//Viernes, 09 de Agosto 2019//
+final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.evento_policia);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+                Log.i("SDK:", " " + Build.VERSION.SDK_INT);
+                NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(MainActivity.this, null);
+                //Poner clase a donde se va a dirigir, en el primer parametro//
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    String channelId = "Tepeyac";
+                    CharSequence name = "Embarque";
+                    String description = "Notificacion campos de embarque editados";
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+
+                    NotificationChannel notificationChannel =  new NotificationChannel(channelId, name, importance);
+                    notificationChannel.setDescription(description);
+                    notificationChannel.enableLights(true);
+                    notificationChannel.setLightColor(Color.GREEN);
+                    notificationChannel.enableVibration(true);
+                    notificationChannel.setVibrationPattern(new long[] {100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+                    notificationManager.createNotificationChannel(notificationChannel);
+
+                    mBuilder = new NotificationCompat.Builder(MainActivity.this, channelId);
+                    mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentIntent(pendingIntent)
+                            .setContentTitle("Modificaci¢n de Embarque")
+                            .setContentText("La modificaci¢n de X, fue exitosa.")
+                            .setLargeIcon(bitmap)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText("Texto mucho mas grande que no se puede leer en una sola linea  jejejejejejejejejeje"))
+                            .setAutoCancel(true);
+
+                    notificationManager.notify( cont++, mBuilder.build());
+
+                }
+                else
+                {
+                    mBuilder.setSmallIcon(R.mipmap.ic_launcher)//Poner logo de Tepeyac
+                            .setContentIntent(pendingIntent)
+                            .setContentTitle("Modificaci¢n de Embarque")
+                            .setContentText("La modificaci¢n de X, fue exitosa.")
+                            .setLargeIcon(bitmap)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText("Texto mucho mas grande que no se puede leer en una sola linea  jejejejejejejejejeje"))
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .setAutoCancel(true);
+
+                    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
+                    notificationManagerCompat.notify(cont++, mBuilder.build());
